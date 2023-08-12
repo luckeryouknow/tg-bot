@@ -1,39 +1,41 @@
 import telebot
-import requests
 from telebot import types
+from inline_buttons_handler import handle_next_currency_button, handle_next_price_button, handle_previous_currency_button, handle_previous_price_button
+from commands_handler import commands_handler
 
 API_TOKEN = '6388083417:AAFnoBZpLQkrrF95Bj9uq0nYma5EUt9qs1k'
-CURRENCY_API_LINK = 'https://api.coinstats.app/public/v1/coins?skip=0&limit=10&currency=USD'
 
 bot = telebot.TeleBot(API_TOKEN)
 
+markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+button1 = types.KeyboardButton('Currency')
+button2 = types.KeyboardButton('Price changes')
+button3 = types.KeyboardButton('Charts')
 
-# Handle '/start' and '/help'
+markup.add(button1, button2, button3)
+
 @bot.message_handler(commands=['start'])
 def start(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    button1 = types.KeyboardButton('Currency')
-    button2 = types.KeyboardButton('Price changes')
-    button3 = types.KeyboardButton('Graphics')
-
-    markup.add(button1, button2, button3)
     bot.send_message(message.chat.id, 'Hi, {0.first_name}'.format(message.from_user), reply_markup=markup)
 
 @bot.message_handler(content_types='text')
-def commandsHandler(message):
-    if message.chat.type == 'private':
-        response = requests.get(CURRENCY_API_LINK).json()['coins']
-        response_message = ''
+def commands_wrapper(message):
+    commands_handler(message)
+            
+@bot.callback_query_handler(func=lambda call: call.data.startswith('previous_currency'))
+def previous_currency_wrapper(call):
+    handle_previous_currency_button(call)
 
-        if message.text == 'Currency':
-            for i in range(10):
-                response_message += response[i]['name'] + ' - ' + str(response[i]['price']) + '$ \n'
-            bot.send_message(message.chat.id, response_message)
+@bot.callback_query_handler(func=lambda call: call.data.startswith('next_currency'))
+def next_currency_wrapper(call):
+    handle_next_currency_button(call)
 
-        if message.text == 'Price changes':
-            for i in range(10):
-                response_message += response[i]['name'] + ": " + str(response[i]['priceChange1w']) + '% \n'
-            bot.send_message(message.chat.id, response_message)
-    
+@bot.callback_query_handler(func=lambda call: call.data.startswith('previous_price_changes'))
+def previous_pice_wrapper(calc):
+    handle_previous_price_button(calc)
 
-bot.infinity_polling()  
+@bot.callback_query_handler(func=lambda call: call.data.startswith('next_price_changes'))
+def next_price_wrapper(calc):
+    handle_next_price_button(calc)
+
+bot.polling(none_stop=True)

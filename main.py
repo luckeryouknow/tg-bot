@@ -1,9 +1,10 @@
 import telebot
 from telebot import types
-from inline_buttons_handler import handle_next_currency_button, handle_next_price_button, handle_previous_currency_button, handle_previous_price_button, handle_chart_button
+from inline_buttons_handler import handle_next_currency_button, handle_next_price_button, handle_previous_currency_button, handle_previous_price_button
 from commands_handler import commands_handler
+from charts_buttons_handler import charts_buttons_handler
 
-API_TOKEN = '6122625919:AAHRcg7YSpfzAIsABv0afJbp3GgmAwfQnQs'
+API_TOKEN = '6388083417:AAFnoBZpLQkrrF95Bj9uq0nYma5EUt9qs1k'
 
 bot = telebot.TeleBot(API_TOKEN)
 
@@ -39,9 +40,9 @@ def previous_pice_wrapper(calc):
 @bot.callback_query_handler(func=lambda call: call.data.startswith('next_price_changes'))
 def next_price_wrapper(calc):
     handle_next_price_button(calc)
-
-@bot.callback_query_handler(func=lambda call: call.data.startswith('chart'))
-def chart_wrapper(message):
-    handle_chart_button(message)
     
+@bot.callback_query_handler(func=lambda call: True)
+def charts_buttons_wrapper(call):
+    charts_buttons_handler(call)
+
 bot.polling(none_stop=True)

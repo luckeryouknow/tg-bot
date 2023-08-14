@@ -2,7 +2,7 @@ import telebot
 import requests
 from telebot import types
 
-API_TOKEN = '6122625919:AAHRcg7YSpfzAIsABv0afJbp3GgmAwfQnQs'
+API_TOKEN = '6388083417:AAFnoBZpLQkrrF95Bj9uq0nYma5EUt9qs1k'
 bot = telebot.TeleBot(API_TOKEN)
 
 skip_currency = 0
@@ -22,20 +22,6 @@ charts_markup = types.InlineKeyboardMarkup()
 charts_markup.row_width = 6
 charts_markup.add(types.InlineKeyboardButton("Choose the other chart", callback_data="chart"))
 
-markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-variant1 = types.KeyboardButton('Bitcoin')
-variant2 = types.KeyboardButton('Ethereum')
-variant3 = types.KeyboardButton('Tether')
-variant4 = types.KeyboardButton('BNB')
-variant5 = types.KeyboardButton('XRP')
-variant6 = types.KeyboardButton('USD Coin')
-variant7 = types.KeyboardButton('Lido Stacked Ether')
-variant8 = types.KeyboardButton('Dogecoin')
-variant9 = types.KeyboardButton('Cardano')
-variant10 = types.KeyboardButton('Solana')
-
-markup.add(variant1, variant2, variant3, variant4, variant5, variant6, variant7, variant8, variant9, variant10)
-
 def handle_previous_currency_button(call):
     global skip_currency
 
@@ -50,7 +36,7 @@ def handle_previous_currency_button(call):
     for i in range(10):
         response_message += response[i]['name'] + ' - ' + str(round(response[i]['price'], 3)) + '$ \n'
 
-    bot.send_message(call.message.chat.id, response_message, reply_markup=currency_markup)
+    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=response_message, reply_markup=currency_markup)
 
 def handle_next_currency_button(call):
     global skip_currency
@@ -66,7 +52,7 @@ def handle_next_currency_button(call):
     for i in range(10):
         response_message += response[i]['name'] + ' - ' + str(round(response[i]['price'], 3)) + '$ \n'
 
-    bot.send_message(call.message.chat.id, response_message, reply_markup=currency_markup)
+    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=response_message, reply_markup=currency_markup)
 
 def handle_previous_price_button(call):
     global skip_price
@@ -82,7 +68,7 @@ def handle_previous_price_button(call):
     for i in range(10):
         response_message += response[i]['name'] + ": " + str(response[i]['priceChange1w']) + '% \n'
 
-    bot.send_message(call.message.chat.id, response_message, reply_markup=price_changes_markup)
+    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=response_message, reply_markup=price_changes_markup)
 
 def handle_next_price_button(call):
     global skip_price
@@ -98,10 +84,4 @@ def handle_next_price_button(call):
     for i in range(10):
         response_message += response[i]['name'] + ": " + str(response[i]['priceChange1w']) + '% \n'
 
-    bot.send_message(call.message.chat.id, response_message, reply_markup=price_changes_markup)
-
-def handle_chart_button(call):
-             
-    bot.send_message(call.message.chat.id, "Choose your chart", reply_markup=markup)
-
-    
+    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=response_message, reply_markup=price_changes_markup)

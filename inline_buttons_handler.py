@@ -1,26 +1,14 @@
 import telebot
 import requests
-from telebot import types
+from markups.currency_markup import currency_markup
+from markups.price_changes_markup import price_changes_markup
+from markups.charts_markup import charts_markup
 
 API_TOKEN = '6388083417:AAFnoBZpLQkrrF95Bj9uq0nYma5EUt9qs1k'
 bot = telebot.TeleBot(API_TOKEN)
 
 skip_currency = 0
 skip_price = 0
-
-currency_markup = types.InlineKeyboardMarkup()
-currency_markup.row_width = 2
-currency_markup.add(types.InlineKeyboardButton("<", callback_data="previous_currency"),
-types.InlineKeyboardButton(">", callback_data="next_currency"))
-
-price_changes_markup = types.InlineKeyboardMarkup()
-price_changes_markup.row_width = 2
-price_changes_markup.add(types.InlineKeyboardButton("<", callback_data="previous_price_changes"),
-types.InlineKeyboardButton(">", callback_data="next_price_changes"))
-
-charts_markup = types.InlineKeyboardMarkup()
-charts_markup.row_width = 6
-charts_markup.add(types.InlineKeyboardButton("Choose the other chart", callback_data="chart"))
 
 def handle_previous_currency_button(call):
     global skip_currency

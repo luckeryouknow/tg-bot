@@ -1,35 +1,13 @@
 import telebot
 import requests
-from telebot import types
+from markups.charts_markup import charts_markup
+from markups.currency_markup import currency_markup
+from markups.price_changes_markup import price_changes_markup
 
 API_TOKEN = '6388083417:AAFnoBZpLQkrrF95Bj9uq0nYma5EUt9qs1k'
 bot = telebot.TeleBot(API_TOKEN)
 
 CURRENCY_API_LINK = 'https://api.coinstats.app/public/v1/coins?skip=0&limit=10&currency=USD'
-
-currency_markup = types.InlineKeyboardMarkup()
-currency_markup.row_width = 2
-currency_markup.add(types.InlineKeyboardButton("<", callback_data="previous_currency"),
-types.InlineKeyboardButton(">", callback_data="next_currency"))
-
-price_changes_markup = types.InlineKeyboardMarkup()
-price_changes_markup.row_width = 2
-price_changes_markup.add(types.InlineKeyboardButton("<", callback_data="previous_price_changes"),
-types.InlineKeyboardButton(">", callback_data="next_price_changes"))
-
-charts_markup = types.InlineKeyboardMarkup()
-variant1 = types.InlineKeyboardButton('Bitcoin', callback_data='BTCUSD')
-variant2 = types.InlineKeyboardButton('Ethereum', callback_data='ETHUSD')
-variant3 = types.InlineKeyboardButton('Tether', callback_data='APTUSDT') #?
-variant4 = types.InlineKeyboardButton('BNB', callback_data='BNBUSD') 
-variant5 = types.InlineKeyboardButton('XRP', callback_data='XRPUSD') #?
-variant6 = types.InlineKeyboardButton('USD Coin', callback_data='USDCUSDT') #?
-variant7 = types.InlineKeyboardButton('Lido Stacked Ether', callback_data="LDOUSD")
-variant8 = types.InlineKeyboardButton('Dogecoin', callback_data="DOGEUSD")
-variant9 = types.InlineKeyboardButton('Cardano', callback_data="ADAUSD")
-variant10 = types.InlineKeyboardButton('Solana', callback_data="SOLUSD")
-
-charts_markup.add(variant1, variant2, variant3, variant4, variant5, variant6, variant7, variant8, variant9, variant10)
 
 def reset_skip_currency():
     global skip_currency
